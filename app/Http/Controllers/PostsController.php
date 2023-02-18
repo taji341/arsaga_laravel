@@ -6,15 +6,16 @@ use App\Models\Posts;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\View\View;
 
 class PostsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(): View
     {
-        //
+        return view('posts.index');
     }
 
     /**
@@ -30,7 +31,13 @@ class PostsController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'message' => 'required|string|max:255',
+        ]);
+
+        $request->user()->posts()->create($validated);
+
+        return redirect(route('posts.index'));
     }
 
     /**

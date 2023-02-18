@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+// アソシエーションの読み込み
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,6 +19,13 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    // アソシエーションの記述
+    // user 1 posts 多
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Posts::class);
+    }
     protected $fillable = [
         'name',
         'email',
