@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\postsController;
+use App\Http\Controllers\FolderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,8 +30,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::resource('posts', PostsController::class)
-    ->only(['index', 'store'])
+Route::resource('/folders/{id}/posts', PostsController::class)
+    ->only(['index', 'store', 'edit', 'update', 'destroy'])
     ->middleware(['auth', 'verified']);
 
+Route::post('/folders/create', [FolderController::class, 'create'])
+    ->name('folders.create');
 require __DIR__.'/auth.php';
