@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->foreignId('folder_id')->constrained()->cascadeOnDelete();
+            $table->bigInteger('folder_id')->unsigned();
             $table->date('date');
+            $table->foreign('folder_id')->references('id')->on('folders');
         });
     }
 

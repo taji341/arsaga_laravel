@@ -26,11 +26,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Posts::class);
     }
+
+    public function folders(): HasMany
+    {
+        return $this->hasMany(Folder::class);
+    }
     protected $fillable = [
         'name',
         'email',
         'password',
     ];
+    
 
     /**
      * The attributes that should be hidden for serialization.

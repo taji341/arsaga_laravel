@@ -28,13 +28,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::resource('/folders/{id}/posts', PostsController::class)
+    ->except(['show']);
+    Route::post('/folders/create', [FolderController::class, 'create'])
+    ->name('folders.create');
 });
-
-Route::resource('/folders/{id}/posts', PostsController::class)
-    ->except(['show'])
-    ->middleware(['auth', 'verified']);
-
-Route::post('/folders/create', [FolderController::class, 'create'])
-    ->name('folders.create')
-    ->middleware(['auth']);
 require __DIR__.'/auth.php';

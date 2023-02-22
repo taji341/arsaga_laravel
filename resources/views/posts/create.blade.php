@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+    <div class="mx-auto p-4 sm:p-6 lg:p-8">
         <form method="POST" action="{{ route('posts.store', ['id' => $folder_id]) }}">
             @csrf
             <p>メモを作成</p>

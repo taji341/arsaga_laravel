@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
 use App\Http\Requests\CreatePosts;
+use Illuminate\Support\Facades\Auth;
+
 
 class PostsController extends Controller
 {
@@ -17,7 +19,7 @@ class PostsController extends Controller
      */
     public function index(int $id): View
     {
-        $folders = Folder::all();
+        $folders = Auth::user()->folders()->get();
         $current_folder = Folder::find($id);
         $posts = $current_folder->posts()->get();
 
@@ -72,6 +74,7 @@ class PostsController extends Controller
         $post = Posts::find($post_id);
         $post->message = $request->message;
         $post->date = $request->date;
+        $post->save();
         
         return redirect()->route('posts.index', [
             'id' => $post->folder_id,
@@ -81,12 +84,13 @@ class PostsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Posts $post): RedirectResponse
+    public function destroy(int $id, int $post_id): RedirectResponse
     {
+        $post = Posts::find($post_id);
         $post->delete();
 
-        return redirect(route('posts.index', [
+        return redirect()->route('posts.index', [
             'id' => $post->folder_id,
-        ]));
+        ]);
     }
 }
