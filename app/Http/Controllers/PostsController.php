@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
+use App\Http\Requests\CreatePosts;
 
 class PostsController extends Controller
 {
@@ -27,29 +28,38 @@ class PostsController extends Controller
     ]);
     }
 
+    public function create(int $id): View
+    {
+    return view('posts/create', [
+        'folder_id' => $id
+    ]);
+    }
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request): RedirectResponse
+    public function store(int $id, CreatePosts $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'message' => 'required|string|max:255',
+        $current_folder = Folder::find($id);
+
+        $post = new Posts();
+        $post->message = $request->message;
+        $post->date = $request->date;
+
+        $current_folder->posts()->save($post);
+
+        return redirect()->route('posts.index', [
+            'id' => $current_folder->id,
         ]);
-
-        $request->user()->posts()->create($validated);
-
-        return redirect(route('posts.index'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Posts $post): View
+    public function edit(int $id, int $post_id): View
     {
-        // 本人のみアクセスを承認
-        $this->authorize('update', $post);
+        $post = Posts::find($post_id);
 
-        return view('posts.edit', [
+        return view('posts/edit', [
             'post' => $post,
         ]);
     }
@@ -57,17 +67,15 @@ class PostsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Posts $post): RedirectResponse
+    public function update(int $id, int $post_id, CreatePosts $request): RedirectResponse
     {
-        // $this->authorize('update', $post);
-
-        $validated = $request->validate([
-            'message' => 'required|string|max:255',
+        $post = Posts::find($post_id);
+        $post->message = $request->message;
+        $post->date = $request->date;
+        
+        return redirect()->route('posts.index', [
+            'id' => $post->folder_id,
         ]);
-
-        $post->update($validated);
-
-        return redirect(route('posts.index'));
     }
 
     /**
@@ -75,10 +83,10 @@ class PostsController extends Controller
      */
     public function destroy(Posts $post): RedirectResponse
     {
-        // $this->authorize('delete', $post);
-
         $post->delete();
 
-        return redirect(route('posts.index'));
+        return redirect(route('posts.index', [
+            'id' => $post->folder_id,
+        ]));
     }
 }

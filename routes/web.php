@@ -31,9 +31,10 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('/folders/{id}/posts', PostsController::class)
-    ->only(['index', 'store', 'edit', 'update', 'destroy'])
+    ->except(['show'])
     ->middleware(['auth', 'verified']);
 
 Route::post('/folders/create', [FolderController::class, 'create'])
-    ->name('folders.create');
+    ->name('folders.create')
+    ->middleware(['auth']);
 require __DIR__.'/auth.php';
