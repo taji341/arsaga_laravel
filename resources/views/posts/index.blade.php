@@ -92,6 +92,11 @@
                             </x-dropdown>
                         </div>
                         <p class="mt-4 text-lg text-gray-900">{{ $post->message }}</p>
+                        @if($post->img)
+                            <div class="pt-5">
+                                <img class="w-38 h-36" src=" {{ asset('storage/'. $post->img)}}">
+                            </div>
+                        @endif
                     </div>
                 </div>
             @endforeach

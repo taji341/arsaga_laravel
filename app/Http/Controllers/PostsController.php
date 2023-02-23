@@ -65,7 +65,11 @@ class PostsController extends Controller
         $post->message = $request->message;
         $post->date = $request->date;
 
-        $current_folder->posts()->save($post);
+        if($request->img){
+            $filename= $request->file('img')->getClientOriginalName();
+            $img = $request->file('img')->storeAs('',$filename,'public');
+            $post->img = $img;
+        }
 
         return redirect()->route('posts.index', [
             'id' => $current_folder->id,
@@ -92,6 +96,12 @@ class PostsController extends Controller
         $post = Posts::find($post_id);
         $post->message = $request->message;
         $post->date = $request->date;
+
+        if($request->img){
+            $filename= $request->file('img')->getClientOriginalName();
+            $img = $request->file('img')->storeAs('',$filename,'public');
+            $post->img = $img;
+        }
         $post->save();
         
         return redirect()->route('posts.index', [

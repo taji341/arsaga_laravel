@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="mx-auto p-4 sm:p-6 lg:p-8">
-        <form method="POST" action="{{ route('posts.update', ['id' => $post->folder_id, 'post' => $post->id]) }}">
+        <form method="POST" enctype="multipart/form-data" action="{{ route('posts.update', ['id' => $post->folder_id, 'post' => $post->id]) }}">
             @csrf
             @method('patch')
             <p>メモを編集</p>
@@ -18,6 +18,14 @@
                     value="{{ old('date', $post->date) }}" />
                 <x-input-error :messages="$errors->get('date')" class="mt-2" />
             </div>
+            <div class="mt-4">
+                <label for="img" class="mt-4">画像ファイル(必須ではありません)</label>
+                <input 
+                    type="file"
+                    name="img"
+                    id="img"
+                    class="block">
+              </div>
             <x-primary-button class="mt-4 mb-4">
                 <p>更新する</p>
             </x-primary-button>
