@@ -10,6 +10,7 @@ use Illuminate\Http\Response;
 use Illuminate\View\View;
 use App\Http\Requests\CreatePosts;
 use Illuminate\Support\Facades\Auth;
+use Storage;
 
 
 class PostsController extends Controller
@@ -64,12 +65,17 @@ class PostsController extends Controller
         $post = new Posts();
         $post->message = $request->message;
         $post->date = $request->date;
+        $post->folder_id = $current_folder->id;
 
         if($request->img){
             $filename= $request->file('img')->getClientOriginalName();
             $img = $request->file('img')->storeAs('',$filename,'public');
             $post->img = $img;
+            // $img = $request->file('img');
+            // $path = Storage::disk('s3')->putFile('/', $img, 'public');
+            // $post->img = Storage::disk('s3')->url($path);
         }
+        $post->save();
 
         return redirect()->route('posts.index', [
             'id' => $current_folder->id,
