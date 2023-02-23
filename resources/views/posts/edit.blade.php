@@ -3,6 +3,7 @@
         <form method="POST" action="{{ route('posts.update', ['id' => $post->folder_id, 'post' => $post->id]) }}">
             @csrf
             @method('patch')
+            <p>メモを編集</p>
             <textarea
                 name="message"
                 class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
@@ -10,7 +11,7 @@
             <x-input-error :messages="$errors->get('message')" class="mt-2" />
             <div class="mt-4">
                 <label for="date">期限日</label>
-                <input 
+                <input
                     type="text"
                     class="block border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" name="date"
                     id="date"

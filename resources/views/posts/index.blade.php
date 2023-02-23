@@ -1,13 +1,44 @@
 <x-app-layout>
     <div class="mx-auto p-4 sm:p-6 lg:p-8">
+        <form method="GET" action="{{ route('posts.index', ['id' => $current_folder_id]) }}">
+            @csrf
+            <label for="keyword">メモを検索</label>
+                <input
+                    name="keyword"
+                    id="keyword"
+                    type="text"
+                    placeholder="メモ内容"
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                    value="{{ $keyword }}" />
+            <x-primary-button class="mt-4">検索する</x-primary-button>
+        </form>
+        <form>
+            <label for="date">期限日検索</label>
+                <input 
+                    type="date"
+                    name="from"
+                    id="date"
+                    placeholder="検索開始日"
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                    value="{{ $from }}" />
+            <label for="to"></label>
+                <input type="date"
+                name="to"
+                id="to"
+                placeholder="検索終了日"
+                class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                value="{{ $to }}" />
+            <x-primary-button class="mt-4">検索する</x-primary-button>
+        </form>
         <form method="POST" action="{{ route('folders.create') }}">
             @csrf
-            <p class="mt-4">フォルダを作成</p>
-            <textarea
-                name="title"
-                placeholder="FoldersName"
-                class="block w-25 border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
-            >{{ old('title') }}</textarea>
+            <label for="title">フォルダを作成</label>
+                <input
+                    name="title"
+                    id="title"
+                    type="text"
+                    placeholder="フォルダ名"
+                    class="border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" />
             <x-input-error :messages="$errors->get('title')" class="mt-2" />
             <x-primary-button class="mt-4">作成する</x-primary-button>
         </form>
@@ -67,3 +98,10 @@
         </div>
     </div>
 </x-app-layout>
+<script>
+    flatpickr(document.getElementById('to'), {
+        locale: 'ja',
+        dateFormat: "Y/m/d",
+        minDate: new Date()
+    });
+</script>

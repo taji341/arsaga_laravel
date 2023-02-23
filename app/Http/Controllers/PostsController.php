@@ -17,16 +17,34 @@ class PostsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(int $id): View
+    public function index(Request $request, int $id): View
     {
         $folders = Auth::user()->folders()->get();
         $current_folder = Folder::find($id);
-        $posts = $current_folder->posts()->get();
+        $keyword = $request->input('keyword');
+        $from = $request->input('from');
+        $to = $request->input('to');
+        $query = Posts::query();
+
+        if(!empty($keyword)) {
+            $query->where('message', 'LIKE', "%{$keyword}%")
+                    ->where('folder_id', $current_folder->id);
+            $posts = $query->get();
+        }elseif(!empty($from && $to)) {
+            $query->whereBetween('date',[$from, $to])
+                    ->where('folder_id', $current_folder->id);
+            $posts = $query->get();
+        }else{
+            $posts = $current_folder->posts()->get();
+        }
 
         return view('posts/index', [
         'folders' => $folders,
         'current_folder_id' => $current_folder->id,
         'posts' => $posts,
+        'keyword' => $keyword,
+        'from' => $from,
+        'to' => $to
     ]);
     }
 
